@@ -1,3 +1,8 @@
-login.py
-__pycache__
+# Ignorar o arquivo analise.py
+analise.py
+
+# Ignorar o arquivo meubanco.db
 meubanco.db
+
+# Ignorar o diretório __pycache__
+__pycache__/
