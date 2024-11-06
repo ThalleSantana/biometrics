@@ -1,4 +1,4 @@
-from base import Funcionario
+from base import Funcionario, Infos
 from tkinter import messagebox, filedialog
 import cv2
 import hashlib
@@ -22,16 +22,29 @@ class Functions:
         
         # autenticação da biometria do usuario
         auth_result = self.authenticate(biometria_path, funcionario.biometria, 'l')
+        nome = funcionario.nome
         
         # verifica se a biometria é igual
         if auth_result:
-          messagebox.showinfo("Login", "Login bem-sucedido!")
+          cargo = funcionario.cargo
+          if cargo == 'Analista':
+            cargo_nivel = 1
+          elif cargo == 'Diretor':
+            cargo_nivel = 2
+          elif cargo == 'Ministro':
+            cargo_nivel = 3
+          else:
+            cargo_nivel = 0
+          return True, cargo_nivel, nome
         else:
           messagebox.showerror("Erro", "Informações incorretas.")
+          return False, 0, 0
       else:
         messagebox.showerror("Erro", "Informações incorretas.")
+        return False, 0, 0
     else:
       messagebox.showerror("Erro", "Por favor, preencha todos os campos.")
+      return False, 0, 0
 
   # Função para pegar o caminho da imagem imagem (biomentria)
   def subir_imagem(self):
@@ -106,3 +119,15 @@ class Functions:
       messagebox.showerror("Erro", "Por favor, preencha todos os campos.")
       return False
     
+  @classmethod
+  # Função para retornar os ids
+  def get_ids(self):
+    return [data["Nível 1"]["ID da Propriedade"] for data in Infos.data]
+
+  @classmethod
+  # Função para retornar as informações com base no id
+  def get_data_by_id(self, property_id):
+    for data in Infos.data:
+      if data["Nível 1"]["ID da Propriedade"] == property_id:
+        return data
+    return None
